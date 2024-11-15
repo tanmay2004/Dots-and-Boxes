@@ -2,7 +2,7 @@ from model import DotsAndBoxes
 from policies import *
 import time
 
-policies = {0: humanPolicy, +1: minimaxPolicy}
+policies = {0: minimaxPolicy, +1: minimaxPolicy}
 game = DotsAndBoxes(N=2, M=2)
 state = game.startState()
 

@@ -17,7 +17,7 @@ class DotsAndBoxes(object):
         return (0, self.horizontal, self.vertical, 0, 0)
 
     def isEnd(self, state):
-        # can be redefined to be max(state[3], state[4] > num_boxes // 2
+        # can be redefined to be max(state[3], state[4]) > num_boxes // 2
         return state[3]+state[4] == self.num_boxes
 
     def utility(self, state):
