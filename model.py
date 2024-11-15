@@ -4,10 +4,12 @@ from copy import deepcopy
 # State is stored as a tuple so that it is immutable
 
 class DotsAndBoxes(object):
-    def __init__(self, N):
-        self.N = N
-        self.horizontal = [[0 for _ in range(N)] for _ in range(N+1)]
-        self.vertical = [[0 for _ in range(N+1)] for _ in range(N)]
+    def __init__(self, N, M):
+        self.N = N # number of rows
+        self.M = M # number of columns
+        self.num_boxes = self.N * self.M
+        self.horizontal = [[0 for _ in range(M)] for _ in range(N+1)]
+        self.vertical = [[0 for _ in range(M+1)] for _ in range(N)]
 
     # state = (player, horizontal edges, vertical edges, player0 score, player1 score)
 
@@ -15,15 +17,8 @@ class DotsAndBoxes(object):
         return (0, self.horizontal, self.vertical, 0, 0)
 
     def isEnd(self, state):
-        # horizontal = state[1]
-        # vertical = state[2]
-
-        # one = all(all(horizontal[i]) for i in range(len(horizontal)))
-        # two = all(all(vertical[i]) for i in range(len(vertical)))
-
-        # return (one and two)
-
-        return state[3]+state[4] == self.N**2
+        # can be redefined to be max(state[3], state[4] > num_boxes // 2
+        return state[3]+state[4] == self.num_boxes
 
     def utility(self, state):
         return state[3] - state[4]
@@ -34,12 +29,15 @@ class DotsAndBoxes(object):
         actions = []
 
         for i in range(self.N+1):
-            for j in range(self.N):
+            for j in range(self.M):
                 if horizontal[i][j] == 0:
                     actions.append((i, j, 0))
-                if vertical[j][i] == 0:
-                    actions.append((j, i, 1))
-
+        
+        for i in range(self.N):
+            for j in range(self.M+1):
+                if vertical[i][j] == 0:
+                    actions.append((i, j, 1))
+        
         return actions
 
     def player(self, state):
@@ -73,7 +71,7 @@ class DotsAndBoxes(object):
         count = 0
 
         for i in range(self.N):
-            for j in range(self.N):
+            for j in range(self.M):
                 if horizontal[i][j] and horizontal[i+1][j] and vertical[i][j] and vertical[i][j+1]:
                     count += 1
         
@@ -83,10 +81,10 @@ class DotsAndBoxes(object):
         horizontal, vertical = state[1], state[2]
 
         for i in range(self.N+1):
-            for j in range(self.N+1):
+            for j in range(self.M+1):
                 print("*", end='')
 
-                if j < self.N:
+                if j < self.M:
                     if horizontal[i][j]:
                         print("----", end='')
                     else:
@@ -97,7 +95,7 @@ class DotsAndBoxes(object):
             if i < self.N:
                 curr = ""
 
-                for k in range(self.N+1):
+                for k in range(self.M+1):
                     if vertical[i][k]:
                         curr += "|"
                     else:

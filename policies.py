@@ -1,4 +1,4 @@
-import random, time
+import random
 from copy import deepcopy
 
 def humanPolicy(game, state):
